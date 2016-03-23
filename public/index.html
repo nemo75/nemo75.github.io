@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Chat de fou</title>
+    <link rel="stylesheet" href="semantic.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="title">
+        <h1 class="titre">Bienvenu sur SimpliChat!</h1>
+    </div>
+
+    <div id="login">
+        <form method="post" id="loginform" class="ui form">
+            <label for="">Choisis ton pseudo !</label><br>
+            <input type="text" name="login" id="username" placeholder="8 charact&egrave;re max" maxlength="8">
+            <label for="couleur">Choisis la couleur de ton pseudo !<br>
+              <input type="text" name="color" id="own"></option><br><br>
+              <label for="">Ou choisis ta couleur parmis cette selection !</label>
+              <select name="couleur" id="couleur">
+                  <option value="0">choisis ta couleur</option>
+                  <option value="red">rouge</option>
+                  <option value="blue">bleu</option>
+                  <option value="teal">bleu bizarre</option>
+                  <option value="purple">Violet</option>
+                  <option value="orange">Orange</option>
+              </select>
+          </label>
+          <input type="submit" value="envoyer" class="ui button" id="but">
+      </form>
+  </div>
+
+  <div class="master" style="display:none;">
+    <div class="block">
+        <div id="messages">
+            <div class="message" id= "msgtpl" style="display:none;">
+                <h3 style="color:{{user.couleur}};color:{{user.own}}; display:inline-block;">{{user.username}} :</h3><p style="display:inline-block; font-size: 17px; color:#E20746; margin-left:15px;text-transform: lowercase;"> {{message}}</p> <p style="display:inline-block; float:right; color:#E20746;"> {{h}}:{{m}}:{{s}}</p>
+                <!-- {{user.couleur}} -->
+            </div>    
+        </div>
+        <div class="inp">
+            <form  class="ui form" action="/" method="post" id="formulaire_chat" style="vertical-align: bottom;">
+             <input type="text" name="message" id="message" placeholder="Ecris ton message" size="50" maxlength="70">
+             <input type="submit" id="envoi_message" value="envoyer" class="ui red tiny button">
+         </form>
+     </div>
+ </div>
+ <div id="users">
+ </div>
+</div>
+<a href="troll.html" class="ui button inverted yellow">NE CLIC PAS</a>
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+   (function($){
+       // Connexiona socket.io
+       var socket = io.connect('http://192.168.1.22:3000');
+       var msgtpl = $('#msgtpl').html();
+       $('#msgtpl').remove();
+
+
+
+       $('#loginform').submit(function(event){
+        event.preventDefault();
+        socket.emit('login',{
+            username : $('#username').val(),
+            couleur : $('#couleur').val(),
+            own : $('#own').val(),
+            id : $(this.username).val()
+        })
+    });
+       socket.on('logged', function(){
+        $('#loging').fadeOut();
+       });
+
+
+         // GESTION DES CONNECTES
+            socket.on('newusr', function(user) {
+                $('#users').append('<div id="' + user.id + '">' + '<img src="msn.png" alt="icon msn" width="25" height="25">' + '<h2 class="ui white inverted button">' + user.username + '</h2> </div>');
+            })
+
+
+         // gerer disconect
+         socket.on('disusr', function(user){
+             $('#' + user.id).remove();
+         })
+
+
+
+         socket.on('newmsg', function(message){
+          Mustache.render(msgtpl, message);
+          $('#messages').append('<div class="message">' +  Mustache.render(msgtpl, message) + '</div>');
+          $('#messages').animate({scrollTop : $('#messages').prop('scrollHeight')}, 5);
+      })
+
+         $('#formulaire_chat').submit(function(event){
+          event.preventDefault();
+          socket.emit('newmsg', {message: $('#message').val()}); 
+          $('#message').focus();
+          $('#message').val();
+          $('#message').val('').focus();
+      }); 
+
+         $('#but').on("click", function(){
+            $('.master').show();
+            $('#login').hide(); 
+        });
+
+     })(jQuery);
+ </script>
+ <script src="mustache.js"></script>
+</body>
+</html>

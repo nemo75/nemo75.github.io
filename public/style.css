@@ -1,0 +1,63 @@
+body {
+	background-color: white;
+}
+.title {
+	width: 100%;
+	height: auto;
+	padding: 20px;
+	background-color: #E20746;
+	margin-bottom: 10%;
+	display: inline-block;
+}
+.master {
+	width: 1200px;
+	margin: auto;
+}
+#utilisateur {
+	font-size: 12px;
+	display: inline-block;
+	margin: 10px;
+}
+.titre {
+	text-align: center;
+	color:white;
+}
+#users {
+	vertical-align: top;
+	margin: auto;
+	display: inline-block;
+	width: 200px;
+	height: 550px;
+	background-color: #E20746;
+}
+.block {
+	display: inline-block;
+	width: 950px;
+	height: 550px;
+	margin: auto;
+	box-shadow: 25px;
+}
+
+#messages {
+	height: 550px;
+	width: 950px;
+	border: 1px solid #E20746;
+	margin: auto;
+	overflow: scroll;
+	/*background-color: #f0f0f0;*/
+}
+
+.message {
+	padding: 0 0 0 10px;
+}
+
+#loginform {
+	margin: auto;
+	width: 500px;
+	text-align: center;
+	margin-bottom: 50px;
+}
+.pseudo {
+	font-size: 16px;
+	color:#00BFA5;
+}
